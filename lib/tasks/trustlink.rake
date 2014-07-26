@@ -53,12 +53,16 @@ namespace :trustlink do
       say "Links"
       pages.each do |page|
         say "Page: #{page['url']}"
-        page.xpath('link').each do |item|
-          anchor = item.at_xpath('anchor').text
-          text   = item.at_xpath('text').text
-          url    = item.at_xpath('url').text
-          TrustlinkLink.create page: page['url'], anchor: anchor, text: text, url: url
-          say "   Added #{anchor} #{text} #{url}"
+        begin
+          page.xpath('link').each do |item|
+            anchor = item.at_xpath('anchor').text
+            text   = item.at_xpath('text').text
+            url    = item.at_xpath('url').text
+            TrustlinkLink.create page: page['url'], anchor: anchor, text: text, url: url
+            say "   Added #{anchor} #{text} #{url}"
+          end
+        rescue
+          next
         end
       end
     end
